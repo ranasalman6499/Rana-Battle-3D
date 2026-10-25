@@ -1,1 +1,95 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rana Battle 3D</title>
+<style>
+body {
+  margin: 0;
+  background: #182b24;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+h1 { color: #ffd54a; }
+canvas {
+  background: #6eaa55;
+  width: 95%;
+  max-width: 700px;
+  border: 3px solid white;
+  border-radius: 10px;
+}
+button {
+  font-size: 20px;
+  padding: 12px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 0;
+}
+</style>
+</head>
+<body>
+<h1>RANA BATTLE 3D</h1>
+<p>Training Ground — Level 1</p>
+<canvas id="game" width="700" height="420"></canvas>
+<div>
+<button onclick="move(0,-15)">⬆️</button><br>
+<button onclick="move(-15,0)">⬅️</button>
+<button onclick="move(15,0)">➡️</button><br>
+<button onclick="move(0,15)">⬇️</button>
+<button onclick="shoot()">🔫 FIRE</button>
+</div>
+<p id="status">Player: Ready</p>
+<script>
+const c = document.getElementById("game");
+const ctx = c.getContext("2d");
+let player = {x:350,y:330};
+let enemy = {x:350,y:100};
+let shots = 0;
+function draw(){
+ ctx.clearRect(0,0,700,420);
+ ctx.fillStyle="#80bd61";
+ ctx.fillRect(0,0,700,420);
+ ctx.fillStyle="#bca77a";
+ ctx.fillRect(70,0,35,420);
+ ctx.fillRect(590,0,35,420);
+ ctx.fillStyle="#416b38";
+ for(let i=0;i<8;i++){
+   ctx.beginPath();
+   ctx.arc(150+i*55,65+(i%2)*55,18,0,Math.PI*2);
+   ctx.fill();
+ }
+ ctx.fillStyle="#e53935";
+ ctx.fillRect(enemy.x-13,enemy.y-13,26,26);
+ ctx.fillStyle="#1769ff";
+ ctx.fillRect(player.x-13,player.y-13,26,26);
+ ctx.fillStyle="white";
+ ctx.font="16px Arial";
+ ctx.fillText("ENEMY",enemy.x-25,enemy.y-20);
+ ctx.fillText("YOU",player.x-15,player.y+32);
+}
+function move(x,y){
+ player.x=Math.max(20,Math.min(680,player.x+x));
+ player.y=Math.max(20,Math.min(400,player.y+y));
+ draw();
+}
+function shoot(){
+ shots++;
+ document.getElementById("status").textContent =
+ "Shots: "+shots+" | Training mode";
+ if(Math.abs(player.x-enemy.x)<65 &&
+    Math.abs(player.y-enemy.y)<65){
+   enemy.x=60+Math.random()*580;
+   enemy.y=50+Math.random()*180;
+   document.getElementById("status").textContent =
+   "Hit! Target moved. Shots: "+shots;
+ }
+ draw();
+}
+draw();
+</script>
+</body>
+</html>
